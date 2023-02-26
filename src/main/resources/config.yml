@@ -1,2 +1,4 @@
 teleportation:
   delay: 5
+homes:
+  limit: 5
