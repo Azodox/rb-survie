@@ -24,6 +24,8 @@ public class HomeManager {
         homesFile = new File(plugin.getDataFolder(), "homes.yml");
 
         if (!homesFile.exists()) {
+            if(!homesFile.getParentFile().exists())
+                homesFile.getParentFile().mkdirs();
             homesFile.createNewFile();
         }
 
@@ -74,8 +76,9 @@ public class HomeManager {
 
         getHomes(uuid).stream().filter(home -> home.getName().equals(homeName)).findFirst().ifPresent(home -> {
             var list = homesData.getStringList(uuid.toString());
-            homesData.getStringList(uuid.toString()).remove(home.toString());
-            homesData.getStringList(uuid.toString()).add(replacement.toString());
+            list.remove(home.toString());
+            list.add(replacement.toString());
+            homesData.set(uuid.toString(), list);
             save();
         });
     }
