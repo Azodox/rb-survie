@@ -1,6 +1,6 @@
 package fr.azodox.rb;
 
-import co.aikar.commands.BukkitCommandManager;
+import co.aikar.commands.PaperCommandManager;
 import fr.azodox.rb.commands.*;
 import fr.azodox.rb.home.Home;
 import fr.azodox.rb.home.HomeManager;
@@ -8,33 +8,22 @@ import fr.azodox.rb.listener.PlayerMoveListener;
 import fr.azodox.rb.teleport.TeleportationManager;
 import fr.azodox.rb.util.HeadUtil;
 import lombok.Getter;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 public class RBSurvie extends JavaPlugin {
 
     private final @Getter TeleportationManager teleportationManager = new TeleportationManager(this);
     private final @Getter HomeManager homeManager = new HomeManager(this);
     private final HeadUtil headUtil = new HeadUtil();
-    private BukkitAudiences adventure;
-
-    public @NotNull BukkitAudiences adventure() {
-        if(this.adventure == null) {
-            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-        }
-        return this.adventure;
-    }
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
 
-        this.adventure = BukkitAudiences.create(this);
         registerHeads();
 
-        BukkitCommandManager manager = new BukkitCommandManager(this);
+        PaperCommandManager manager = new PaperCommandManager(this);
         manager.getCommandCompletions().registerCompletion("players", c -> getServer().getOnlinePlayers().stream().map(Player::getName).toList());
         manager.getCommandCompletions().registerCompletion("homes", completion -> homeManager.getHomes(completion.getPlayer().getUniqueId()).stream().map(Home::getName).toList());
         manager.registerCommand(new HomeCommand(this));
@@ -46,14 +35,6 @@ public class RBSurvie extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
         getLogger().info("Enabled!");
-    }
-
-    @Override
-    public void onDisable() {
-        if(this.adventure != null) {
-            this.adventure.close();
-            this.adventure = null;
-        }
     }
 
     private void registerHeads() {
