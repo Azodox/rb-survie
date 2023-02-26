@@ -98,7 +98,6 @@ public class ItemBuilder {
 
     /** Initalizes the ItemBuilder with a {@link ItemStack} */
     public ItemBuilder(ItemStack item) {
-        System.out.println(item);
         Validate.notNull(item, "The item is null.");
         this.item = item;
         this.material = item.getType();
@@ -575,7 +574,7 @@ public class ItemBuilder {
         if (displayname != null) {
             meta.setDisplayName(displayname);
         }
-        if (lore.size() > 0) {
+        if (lore != null && lore.size() > 0) {
             meta.setLore(lore);
         }
         if (flags.size() > 0) {
