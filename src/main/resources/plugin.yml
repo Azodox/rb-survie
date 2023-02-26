@@ -1,0 +1,5 @@
+name: Survie
+version: @version@
+author: Azodox_
+api-version: 1.19
+main: fr.azodox.rb.RBSurvie
