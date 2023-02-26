@@ -25,6 +25,11 @@ public class SetHomeCommand extends BaseCommand {
     @CommandCompletion("@homes")
     public void setHome(Player player, String homeName){
         if(!plugin.getHomeManager().hasHome(player.getUniqueId(), homeName)){
+            if(!player.hasPermission("rb.home.limit.bypass") && plugin.getHomeManager().getHomes(player.getUniqueId()).size() >= plugin.getConfig().getInt("homes.limit")){
+                player.sendMessage("§e§lRBSurvie >> §7Vous avez atteint la limite de homes.");
+                return;
+            }
+
             plugin.getHomeManager().addHome(player.getUniqueId(),
                     new Home(homeName, player.getLocation(), player.getUniqueId()));
             player.sendMessage("§e§lRBSurvie >> §7Home créé avec succès.");
