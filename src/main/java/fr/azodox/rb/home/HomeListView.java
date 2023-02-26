@@ -10,14 +10,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 public class HomeListView extends PaginatedView<Home> {
 
     public HomeListView(String title, List<Home> homes) {
         super(9 * 6, title);
-        setSource(homes);
-        setPreviousPageItem((context, item) -> item.withItem(new ItemBuilder(HeadUtil.getHead("previousPage")).displayname("§c§lPage précédente").build()));
-        setNextPageItem((context, item) -> item.withItem(new ItemBuilder(HeadUtil.getHead("nextPage")).displayname("§c§lPage suivante").build()));
+        setSourceAsync(homePaginatedViewContext -> CompletableFuture.completedFuture(homes));
+        setLayout("OOOOOOOOO", "OOOOOOOOO", "OOOOOOOOO", "OOOOOOOOO", "OOOOOOOOO", "XXX<X>XXX");
+        setPreviousPageItem((context, item) -> item.withItem(new ItemBuilder(HeadUtil.getHead("previous_page")).displayname("§c§lPage précédente").build()));
+        setNextPageItem((context, item) -> item.withItem(new ItemBuilder(HeadUtil.getHead("next_page")).displayname("§c§lPage suivante").build()));
     }
 
     @Override
