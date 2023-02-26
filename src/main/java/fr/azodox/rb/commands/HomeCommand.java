@@ -27,7 +27,7 @@ public class HomeCommand extends BaseCommand {
 
     @CatchUnknown
     @Syntax("[player]:<homeName>")
-    @CommandPermission("home.see.other")
+    @CommandPermission("rb.home.see.other")
     public void onTargetHome(Player player, @Split(":") String[] homeName){
         var target = Bukkit.getOfflinePlayer(homeName[0]).getUniqueId();
         var home = homeName[1];
