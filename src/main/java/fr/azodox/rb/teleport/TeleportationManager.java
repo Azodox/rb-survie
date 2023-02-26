@@ -35,7 +35,7 @@ public class TeleportationManager {
         }
 
         player.sendMessage("§7Vous avez demandé à " + target.getName() + " de vous téléporter.");
-        plugin.adventure().player(target).sendMessage(Component.text("Vous avez reçu une demande de téléportation de " + player.getName() + ".")
+        player.sendMessage(Component.text("Vous avez reçu une demande de téléportation de " + player.getName() + ".")
                 .color(NamedTextColor.GRAY)
                 .append(Component.space())
                 .append(Component.text("[ACCEPTER]")
@@ -55,19 +55,19 @@ public class TeleportationManager {
      */
     public void acceptRequest(Player player, Player sender){
         if(teleportationRequests.getIfPresent(sender) == null){
-            plugin.adventure().player(player).sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
+            player.sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
             return;
         }
 
         Player target = teleportationRequests.getIfPresent(sender);
         if(target.getUniqueId().equals(player.getUniqueId())){
             if(!sender.isOnline()){
-                plugin.adventure().player(player).sendMessage(Component.text("Le joueur n'est plus connecté.").color(NamedTextColor.RED));
+                player.sendMessage(Component.text("Le joueur n'est plus connecté.").color(NamedTextColor.RED));
                 return;
             }
 
-            plugin.adventure().player(sender).sendMessage(Component.text(player.getName() + " a accepté votre demande de téléportation.").color(NamedTextColor.GRAY));
-            plugin.adventure().player(sender).sendMessage(Component.text("\u26A0 Ne bougez pas.").color(NamedTextColor.RED));
+            sender.sendMessage(Component.text(player.getName() + " a accepté votre demande de téléportation.").color(NamedTextColor.GRAY));
+            sender.sendMessage(Component.text("\u26A0 Ne bougez pas.").color(NamedTextColor.RED));
             var task = plugin.getServer().getScheduler().runTaskTimer(plugin, new TeleportationRunnable(plugin, sender, player.getLocation()), 0, 20);
 
             if(sender.hasPermission("rb.tp.bypass.delay")){
@@ -79,48 +79,48 @@ public class TeleportationManager {
             teleporting.put(sender, task.getTaskId());
             teleportationRequests.invalidate(sender);
         }else{
-            plugin.adventure().player(player).sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
+            player.sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
         }
     }
 
     public void denyRequest(Player player, Player sender){
         if(teleportationRequests.getIfPresent(sender) == null){
-            plugin.adventure().player(player).sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
+            player.sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
             return;
         }
 
         Player target = teleportationRequests.getIfPresent(sender);
         if(target.getUniqueId().equals(player.getUniqueId())){
             if(!sender.isOnline()){
-                plugin.adventure().player(player).sendMessage(Component.text("Le joueur n'est plus connecté.").color(NamedTextColor.RED));
+                player.sendMessage(Component.text("Le joueur n'est plus connecté.").color(NamedTextColor.RED));
                 return;
             }
 
-            plugin.adventure().player(sender).sendMessage(Component.text(player.getName() + " a refusé votre demande de téléportation.").color(NamedTextColor.GRAY));
+            sender.sendMessage(Component.text(player.getName() + " a refusé votre demande de téléportation.").color(NamedTextColor.GRAY));
             teleportationRequests.invalidate(sender);
         }else{
-            plugin.adventure().player(player).sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
+            player.sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
         }
     }
 
     public void cancelRequest(Player player, Player target){
         if(teleportationRequests.getIfPresent(player) == null){
-            plugin.adventure().player(player).sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
+            player.sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
             return;
         }
 
         if(teleportationRequests.getIfPresent(player).getUniqueId().equals(target.getUniqueId())){
             if(teleporting.containsKey(player)){
-                plugin.adventure().player(player).sendMessage(Component.text("Vous ne pouvez pas annulé une demande pendant que vous vous téléportez.").color(NamedTextColor.RED));
+                player.sendMessage(Component.text("Vous ne pouvez pas annulé une demande pendant que vous vous téléportez.").color(NamedTextColor.RED));
                 return;
             }
 
             teleportationRequests.invalidate(player);
             plugin.getServer().getScheduler().getPendingTasks().stream().filter(bukkitTask -> bukkitTask.getTaskId() == teleporting.get(player)).findFirst().ifPresent(BukkitTask::cancel);
             teleporting.remove(player);
-            plugin.adventure().player(player).sendMessage(Component.text("Vous avez annulé votre demande de téléportation.").color(NamedTextColor.GRAY));
+            player.sendMessage(Component.text("Vous avez annulé votre demande de téléportation.").color(NamedTextColor.GRAY));
         }else{
-            plugin.adventure().player(player).sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
+            player.sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
         }
     }
 

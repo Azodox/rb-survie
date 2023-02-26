@@ -27,14 +27,14 @@ public class TeleportationRunnable implements Runnable {
     public void run() {
         if(!player.hasPermission("rb.tp.bypass.delay")){
             if(timer > 0){
-                plugin.adventure().player(player).sendActionBar(Component.text("Téléportation dans " + timer + " seconde(s)").color(NamedTextColor.GRAY));
+                player.sendActionBar(Component.text("Téléportation dans " + timer + " seconde(s)").color(NamedTextColor.GRAY));
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1f);
                 timer--;
                 return;
             }
         }
-        player.teleport(to);
-        plugin.adventure().player(player).sendActionBar(Component.text("Swoooosh!").color(NamedTextColor.GRAY));
+        player.teleportAsync(to);
+        player.sendActionBar(Component.text("Swoooosh!").color(NamedTextColor.GRAY));
         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 0.5f, 1f);
         plugin.getTeleportationManager().getTeleporting().remove(player);
         plugin.getTeleportationManager().getTeleportationRequests().invalidate(player);
