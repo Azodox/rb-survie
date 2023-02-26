@@ -37,7 +37,7 @@ dependencies {
 }
 
 shadowJar {
-    archiveClassifier.set('')
+    archiveClassifier.set('paper')
 }
 
 compileJava {
