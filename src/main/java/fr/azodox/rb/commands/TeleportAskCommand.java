@@ -17,6 +17,7 @@ public class TeleportAskCommand extends BaseCommand {
 
     @CatchUnknown
     @CommandPermission("rb.tp.ask")
+    @CommandCompletion("@players")
     @Syntax("<player>")
     public void onTpa(Player player, String target){
         plugin.getTeleportationManager().requestTeleportation(player, Bukkit.getPlayerExact(target));
@@ -39,8 +40,8 @@ public class TeleportAskCommand extends BaseCommand {
     @Subcommand("cancel")
     @Syntax("<player>")
     @CommandPermission("rb.tpa.cancel")
-    public void onTpaCancel(Player player, String sender){
-        plugin.getTeleportationManager().cancelRequest(player, Bukkit.getPlayerExact(sender));
+    public void onTpaCancel(Player player, @Optional String sender){
+        plugin.getTeleportationManager().cancelRequest(player, sender != null ? Bukkit.getPlayerExact(sender) : null);
     }
 
     @HelpCommand
