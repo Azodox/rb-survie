@@ -9,6 +9,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -103,15 +104,15 @@ public class TeleportationManager {
         }
     }
 
-    public void cancelRequest(Player player, Player target){
+    public void cancelRequest(Player player, @Nullable Player target){
         if(teleportationRequests.getIfPresent(player) == null){
             player.sendMessage(Component.text("Vous n'avez pas de demande de téléportation en attente.").color(NamedTextColor.RED));
             return;
         }
 
-        if(teleportationRequests.getIfPresent(player).getUniqueId().equals(target.getUniqueId())){
+        if(target == null || teleportationRequests.getIfPresent(player).getUniqueId().equals(target.getUniqueId())){
             if(teleporting.containsKey(player)){
-                player.sendMessage(Component.text("Vous ne pouvez pas annulé une demande pendant que vous vous téléportez.").color(NamedTextColor.RED));
+                player.sendMessage(Component.text("Vous ne pouvez pas annuler une demande pendant que vous vous téléportez.").color(NamedTextColor.RED));
                 return;
             }
 
